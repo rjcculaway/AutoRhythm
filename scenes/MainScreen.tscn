@@ -1,0 +1,142 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://graphics/background.tres" type="Gradient" id=1]
+[ext_resource path="res://scenes/MainScreen.gd" type="Script" id=2]
+
+[sub_resource type="DynamicFontData" id=18]
+font_path = "res://fonts/FerriteCoreDX-Regular.otf"
+
+[sub_resource type="DynamicFont" id=14]
+size = 32
+font_data = SubResource( 18 )
+
+[sub_resource type="StyleBoxTexture" id=15]
+
+[sub_resource type="DynamicFontData" id=1]
+font_path = "res://fonts/FerriteCoreDX-Display.otf"
+
+[sub_resource type="DynamicFont" id=2]
+size = 32
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_char = 6
+font_data = SubResource( 1 )
+
+[sub_resource type="Theme" id=6]
+default_font = SubResource( 2 )
+Button/fonts/font = SubResource( 14 )
+Button/styles/normal = SubResource( 15 )
+
+[sub_resource type="Shader" id=11]
+code = "shader_type canvas_item;
+
+uniform vec2 shift = vec2(0.5, 1);
+uniform vec3 fade = vec3(0.5, 0.5, 0.5);
+
+void fragment() {
+//	shift = vec2(mod(abs(UV.x - TIME / 4.0), 1.0), UV.y);
+	float timeProgress = (TIME / 4.0);
+	vec2 invertedUV = 1.0 - UV;
+	float u = mod(length((invertedUV - shift) * 0.375) - timeProgress, 1.0);
+	float v = atan(UV.y, UV.x) / radians(180.0);
+	COLOR = texture(TEXTURE, vec2(u, v));
+}"
+
+[sub_resource type="ShaderMaterial" id=12]
+shader = SubResource( 11 )
+shader_param/shift = Vector2( 0.5, 1 )
+shader_param/fade = Vector3( 0.5, 0.5, 0.5 )
+
+[sub_resource type="GDScript" id=10]
+
+[sub_resource type="GradientTexture" id=7]
+gradient = ExtResource( 1 )
+script = SubResource( 10 )
+
+[sub_resource type="DynamicFontData" id=8]
+font_path = "res://fonts/FerriteCoreDX-Display.otf"
+
+[sub_resource type="DynamicFont" id=9]
+size = 96
+extra_spacing_char = 4
+font_data = SubResource( 8 )
+
+[sub_resource type="StyleBoxFlat" id=16]
+bg_color = Color( 0, 0, 0, 0.501961 )
+
+[sub_resource type="Theme" id=17]
+PanelContainer/styles/panel = SubResource( 16 )
+
+[node name="MainScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = SubResource( 6 )
+script = ExtResource( 2 )
+
+[node name="Background" type="TextureRect" parent="."]
+material = SubResource( 12 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = SubResource( 7 )
+expand = true
+
+[node name="MenuItems" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="MenuItems"]
+margin_right = 1280.0
+margin_bottom = 586.0
+size_flags_vertical = 3
+custom_constants/margin_right = 36
+custom_constants/margin_top = 36
+custom_constants/margin_left = 36
+custom_constants/margin_bottom = 36
+
+[node name="Label" type="Label" parent="MenuItems/MarginContainer2"]
+margin_left = 36.0
+margin_top = 36.0
+margin_right = 912.0
+margin_bottom = 152.0
+size_flags_horizontal = 0
+size_flags_vertical = 2
+custom_fonts/font = SubResource( 9 )
+text = "AutoRhythm"
+
+[node name="Buttons" type="PanelContainer" parent="MenuItems"]
+margin_top = 590.0
+margin_right = 1280.0
+margin_bottom = 720.0
+theme = SubResource( 17 )
+
+[node name="MarginContainer" type="MarginContainer" parent="MenuItems/Buttons"]
+margin_right = 1280.0
+margin_bottom = 130.0
+custom_constants/margin_right = 24
+custom_constants/margin_top = 24
+custom_constants/margin_left = 24
+custom_constants/margin_bottom = 24
+
+[node name="ButtonArrangement" type="VBoxContainer" parent="MenuItems/Buttons/MarginContainer"]
+margin_left = 24.0
+margin_top = 24.0
+margin_right = 1256.0
+margin_bottom = 106.0
+
+[node name="NewSong" type="Button" parent="MenuItems/Buttons/MarginContainer/ButtonArrangement"]
+margin_right = 227.0
+margin_bottom = 39.0
+size_flags_horizontal = 0
+text = "New Song"
+
+[node name="Exit" type="Button" parent="MenuItems/Buttons/MarginContainer/ButtonArrangement"]
+margin_top = 43.0
+margin_right = 97.0
+margin_bottom = 82.0
+size_flags_horizontal = 0
+text = "Exit"
+
+[connection signal="pressed" from="MenuItems/Buttons/MarginContainer/ButtonArrangement/NewSong" to="." method="_on_NewSong_pressed"]
