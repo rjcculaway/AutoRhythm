@@ -5,6 +5,7 @@ onready var music_player: AudioStreamPlayer = $MusicPlayer
 var beat_map = []
 
 signal beat_channels_ready()
+signal beat_lanes_begin()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -19,4 +20,11 @@ func _on_pressed_beat(lane_id):
 
 # Wait for three (3) seconds before the track starts
 func _on_StartTimer_timeout():
+	emit_signal("beat_lanes_begin")
+	var beat_sync_timer: Timer = $BeatSyncTimer
+	beat_sync_timer.wait_time = GameSettings.ADJACENCY_RADIUS - beat_map[0]
+	print(GameSettings.ADJACENCY_RADIUS - beat_map[0])
+	beat_sync_timer.start()
+
+func _on_beat_sync_timeout():
 	music_player.play()

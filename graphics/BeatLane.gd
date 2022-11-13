@@ -9,7 +9,6 @@ onready var beats: Control = $Beats
 onready var beat_target: MarginContainer = $BeatTarget
 const active_color = Color(1, 1, 1, 0.5)
 const inactive_color = Color(0, 0, 0, 0.5)
-const ADJACENCY_RADIUS: float = 2.0
 
 var beat_scene: PackedScene = preload("res://graphics/Beat.tscn")
 var beat_scenes: Array = []
@@ -35,31 +34,39 @@ func _process(delta):
 	return
 
 func _on_audio_progressed(playback_position, playing):
-	if (playing):
-		var index_nearest = beat_channel.bsearch(playback_position)
-		for beat in beats.get_children():
-			var beat_node: Beat = beat
-			var beat_distance: float = beat_channel[beat_node.beat_index] - playback_position
-			if beat_node.beat_index < index_nearest:
-				beat.queue_free()
-			else:
-				if beat_distance <= ADJACENCY_RADIUS and beat_distance > 0:
-					beat_node.visible = true
-					var tween: Tween = beat_node.get_node("Tween")
-					tween.remove_all()
-					
-					tween.interpolate_property(beat_node, "position", beat_node.position, Vector2(beat_node.position[0], beat_target.rect_global_position[1]), beat_distance, Tween.TRANS_LINEAR)
-					tween.start()
-				else:
-					beat_node.visible = false
+#	var index_nearest = beat_channel.bsearch(playback_position)
+#	for beat in beats.get_children():
+#		var beat_node: Beat = beat
+#		var beat_distance: float = beat_channel[beat_node.beat_index] - playback_position + GameSettings.ADJACENCY_RADIUS
+#
+#		if beat_distance <= GameSettings.ADJACENCY_RADIUS and beat_distance > 0:
+#			beat_node.visible = true
+#		else:
+#			beat_node.visible = false
+#
+#		if beat_node.beat_index < index_nearest:
+#			beat.queue_free()
+#
 	return
 
 
 func _on_beat_channels_ready():
 	beat_channel_size = beat_channel.size()
 	for i in range(beat_channel_size):
-		var new_beat = beat_scene.instance()
+		var new_beat: Beat = beat_scene.instance()
 		new_beat.beat_index = i
 		new_beat.position = Vector2(beat_target.get_anchor(MARGIN_LEFT), -96)
 		beats.add_child(new_beat)
+		
+		var tween: Tween = new_beat.get_node("Tween")
+		var delay = beat_channel[i] - beat_channel[0]
+		var beat_circle: AntialiasedRegularPolygon2D = new_beat.get_node("BeatCircle")
+		tween.interpolate_property(new_beat, "position", new_beat.position, Vector2(0, beat_target.rect_global_position[1]), GameSettings.ADJACENCY_RADIUS, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, delay)
+		tween.interpolate_property(beat_circle, "color", beat_circle.color, Color.transparent, GameSettings.ADJACENCY_RADIUS, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, delay)
+		tween.interpolate_property(beat_circle, "stroke_color", beat_circle.stroke_color, Color.transparent, GameSettings.ADJACENCY_RADIUS, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, delay)
 	return
+	
+func _on_begin_playing():
+	for beat in beats.get_children():
+		var tween: Tween = beat.get_node("Tween")
+		tween.start()
