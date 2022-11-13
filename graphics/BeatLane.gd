@@ -14,8 +14,6 @@ const ADJACENCY_RADIUS: float = 2.0
 var beat_scene: PackedScene = preload("res://graphics/Beat.tscn")
 var beat_scenes: Array = []
 
-var current_playback_position: float = 0.0
-
 signal pressed_beat(lane_id)
 var beat_channel_size = 0
 
@@ -34,15 +32,26 @@ func _input(event):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	var index_nearest = beat_channel.bsearch(current_playback_position)
-	for beat in beats.get_children():
-		var beat_distance: float = 1 - (abs(current_playback_position - beat_channel[beat.beat_index]) / ADJACENCY_RADIUS)
-		(beat as Beat).position = Vector2(0, lerp(-96, beat_target.rect_global_position[1], beat_distance))
-		if (beat as Beat).beat_index < index_nearest:
-			beat.queue_free()
+	return
 
-func _on_audio_progressed(playback_position):
-	current_playback_position = playback_position
+func _on_audio_progressed(playback_position, playing):
+	if (playing):
+		var index_nearest = beat_channel.bsearch(playback_position)
+		for beat in beats.get_children():
+			var beat_node: Beat = beat
+			var beat_distance: float = beat_channel[beat_node.beat_index] - playback_position
+			if beat_node.beat_index < index_nearest:
+				beat.queue_free()
+			else:
+				if beat_distance <= ADJACENCY_RADIUS and beat_distance > 0:
+					beat_node.visible = true
+					var tween: Tween = beat_node.get_node("Tween")
+					tween.remove_all()
+					
+					tween.interpolate_property(beat_node, "position", beat_node.position, Vector2(beat_node.position[0], beat_target.rect_global_position[1]), beat_distance, Tween.TRANS_LINEAR)
+					tween.start()
+				else:
+					beat_node.visible = false
 	return
 
 
@@ -51,5 +60,6 @@ func _on_beat_channels_ready():
 	for i in range(beat_channel_size):
 		var new_beat = beat_scene.instance()
 		new_beat.beat_index = i
+		new_beat.position = Vector2(beat_target.get_anchor(MARGIN_LEFT), -96)
 		beats.add_child(new_beat)
 	return

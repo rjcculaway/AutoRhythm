@@ -16,3 +16,7 @@ func _ready():
 
 func _on_pressed_beat(lane_id):
 	pass
+
+# Wait for three (3) seconds before the track starts
+func _on_StartTimer_timeout():
+	music_player.play()
