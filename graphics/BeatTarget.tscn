@@ -1,6 +1,20 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://addons/antialiased_line2d/antialiased_regular_polygon2d.gd" type="Script" id=1]
+
+[sub_resource type="ParticlesMaterial" id=1]
+emission_shape = 4
+emission_point_count = 1
+flag_disable_z = true
+direction = Vector3( 0, 0, 0 )
+spread = 180.0
+initial_velocity = 113.04
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+radial_accel = 73.04
+radial_accel_random = 1.0
+angle_random = 1.0
+hue_variation = 1.0
 
 [node name="MarginContainer" type="MarginContainer"]
 anchor_left = 0.5
@@ -19,6 +33,11 @@ script = ExtResource( 1 )
 size = Vector2( 128, 128 )
 stroke_color = Color( 0, 0, 0, 1 )
 stroke_width = 48.0
+
+[node name="Particles2D" type="Particles2D" parent="AntialiasedRegularPolygon2D2"]
+emitting = false
+amount = 64
+process_material = SubResource( 1 )
 
 [node name="AntialiasedRegularPolygon2D" type="Polygon2D" parent="."]
 position = Vector2( 80, 80 )

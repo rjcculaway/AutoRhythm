@@ -55,15 +55,16 @@ func _on_beat_channels_ready():
 	for i in range(beat_channel_size):
 		var new_beat: Beat = beat_scene.instance()
 		new_beat.beat_index = i
-		new_beat.position = Vector2(beat_target.get_anchor(MARGIN_LEFT), -96)
+		new_beat.position = Vector2(32, -72)
 		beats.add_child(new_beat)
 		
 		var tween: Tween = new_beat.get_node("Tween")
 		var delay = beat_channel[i] - beat_channel[0]
 		var beat_circle: AntialiasedRegularPolygon2D = new_beat.get_node("BeatCircle")
-		tween.interpolate_property(new_beat, "position", new_beat.position, Vector2(0, beat_target.rect_global_position[1]), GameSettings.ADJACENCY_RADIUS, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, delay)
-		tween.interpolate_property(beat_circle, "color", beat_circle.color, Color.transparent, GameSettings.ADJACENCY_RADIUS, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, delay)
-		tween.interpolate_property(beat_circle, "stroke_color", beat_circle.stroke_color, Color.transparent, GameSettings.ADJACENCY_RADIUS, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, delay)
+		tween.interpolate_property(new_beat, "position", new_beat.position, Vector2(34, beat_target.rect_global_position[1] + 32), GameSettings.ADJACENCY_RADIUS, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, delay)
+		tween.interpolate_property(new_beat, "position", Vector2(34, beat_target.rect_global_position[1] + 32), Vector2(32, get_viewport_rect().size[1] + 72), GameSettings.ADJACENCY_RADIUS, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, delay + GameSettings.ADJACENCY_RADIUS)
+		tween.interpolate_property(beat_circle, "color", beat_circle.color, Color.transparent, GameSettings.ADJACENCY_RADIUS, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, delay + GameSettings.ADJACENCY_RADIUS)
+		tween.interpolate_property(beat_circle, "stroke_color", beat_circle.stroke_color, Color.transparent, GameSettings.ADJACENCY_RADIUS, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, delay + GameSettings.ADJACENCY_RADIUS)
 	return
 	
 func _on_begin_playing():
