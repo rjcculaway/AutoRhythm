@@ -9,7 +9,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	var playback_position = self.get_playback_position()
 	emit_signal("audio_progressed", playback_position, self.playing)
 	previous_playback_position = playback_position
