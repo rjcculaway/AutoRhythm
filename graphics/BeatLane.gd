@@ -13,7 +13,7 @@ const inactive_color = Color(0, 0, 0, 0.5)
 var beat_scene: PackedScene = preload("res://graphics/Beat.tscn")
 var beat_scenes: Array = []
 
-signal pressed_beat(lane_id)
+signal pressed_beat(lane_id, beat_channel)
 var beat_channel_size = 0
 
 # Called when the node enters the scene tree for the first time.
@@ -27,7 +27,7 @@ func _input(event):
 				lane.color = active_color
 				var particle_emitter: Particles2D = beat_target.get_node("AntialiasedRegularPolygon2D2/Particles2D")
 				particle_emitter.restart()
-				emit_signal("pressed_beat", self.name)
+				emit_signal("pressed_beat", self.name, beat_channel)
 			if event.is_action_released(key_press):
 				lane.color = inactive_color
 
@@ -56,3 +56,12 @@ func _on_begin_playing():
 	for beat in beats.get_children():
 		var tween: Tween = beat.get_node("Tween")
 		tween.start()
+
+
+func _on_eliminate_beat(lane_id, beat_index):
+	if (lane_id == self.name):
+		for beat in beats.get_children():
+			if (beat as Beat).beat_index == beat_index:
+				beat.queue_free()
+				break
+	return
