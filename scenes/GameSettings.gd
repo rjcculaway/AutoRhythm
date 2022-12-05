@@ -1,3 +1,3 @@
 extends Node
 
-const ADJACENCY_RADIUS: float = 2.0
+const adjacency_radius: float = 2.0

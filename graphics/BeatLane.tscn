@@ -1,12 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://graphics/BeatTarget.tscn" type="PackedScene" id=1]
 [ext_resource path="res://graphics/BeatLane.gd" type="Script" id=2]
-
-[sub_resource type="Curve2D" id=1]
-_data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 640 )
-}
 
 [node name="BeatLane" type="Control"]
 anchor_left = 0.062
@@ -33,18 +28,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 0, 0, 0, 0.501961 )
 
+[node name="BeatTarget" parent="." instance=ExtResource( 1 )]
+anchor_bottom = 1.022
+margin_top = -0.160034
+margin_right = 88.0
+margin_bottom = 0.159973
+
 [node name="Beats" type="Control" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -80.0
 margin_right = 80.0
 margin_bottom = 64.0
-
-[node name="BeatTarget" parent="." instance=ExtResource( 1 )]
-anchor_top = 0.778
-margin_top = -0.160034
-
-[node name="BeatPath" type="Path2D" parent="."]
-position = Vector2( 64, 0 )
-scale = Vector2( 1, 0.9125 )
-curve = SubResource( 1 )

@@ -5,7 +5,7 @@ const NUMBER_OF_BEATS = 512
 func _ready():
 	pass # Replace with function body.
 
-func generate_random_beat_map(audio_stream: AudioStreamSample) -> Array:
+func generate_random_beat_map(_audio_stream: AudioStreamSample) -> Array:
 #	print(audio_stream)
 #	var random = RandomNumberGenerator.new()
 #	random.randomize()

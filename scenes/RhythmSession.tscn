@@ -101,31 +101,3 @@ script = ExtResource( 6 )
 
 [node name="BeatMapGenerator" type="Node" parent="."]
 script = ExtResource( 5 )
-
-[node name="StartTimer" type="Timer" parent="."]
-wait_time = 3.0
-one_shot = true
-autostart = true
-
-[node name="BeatSyncTimer" type="Timer" parent="."]
-one_shot = true
-
-[connection signal="beat_channels_ready" from="." to="MarginContainer/BeatLanes/BeatLane" method="_on_beat_channels_ready"]
-[connection signal="beat_channels_ready" from="." to="MarginContainer/BeatLanes/BeatLane2" method="_on_beat_channels_ready"]
-[connection signal="beat_channels_ready" from="." to="MarginContainer/BeatLanes/BeatLane3" method="_on_beat_channels_ready"]
-[connection signal="beat_channels_ready" from="." to="MarginContainer/BeatLanes/BeatLane4" method="_on_beat_channels_ready"]
-[connection signal="beat_lanes_begin" from="." to="MarginContainer/BeatLanes/BeatLane" method="_on_begin_playing"]
-[connection signal="beat_lanes_begin" from="." to="MarginContainer/BeatLanes/BeatLane2" method="_on_begin_playing"]
-[connection signal="beat_lanes_begin" from="." to="MarginContainer/BeatLanes/BeatLane3" method="_on_begin_playing"]
-[connection signal="beat_lanes_begin" from="." to="MarginContainer/BeatLanes/BeatLane4" method="_on_begin_playing"]
-[connection signal="eliminate_beat" from="." to="MarginContainer/BeatLanes/BeatLane" method="_on_eliminate_beat"]
-[connection signal="eliminate_beat" from="." to="MarginContainer/BeatLanes/BeatLane2" method="_on_eliminate_beat"]
-[connection signal="eliminate_beat" from="." to="MarginContainer/BeatLanes/BeatLane3" method="_on_eliminate_beat"]
-[connection signal="eliminate_beat" from="." to="MarginContainer/BeatLanes/BeatLane4" method="_on_eliminate_beat"]
-[connection signal="updated_score" from="." to="Overlay/Score" method="on_updated_score"]
-[connection signal="pressed_beat" from="MarginContainer/BeatLanes/BeatLane" to="." method="_on_pressed_beat"]
-[connection signal="pressed_beat" from="MarginContainer/BeatLanes/BeatLane2" to="." method="_on_pressed_beat"]
-[connection signal="pressed_beat" from="MarginContainer/BeatLanes/BeatLane3" to="." method="_on_pressed_beat"]
-[connection signal="pressed_beat" from="MarginContainer/BeatLanes/BeatLane4" to="." method="_on_pressed_beat"]
-[connection signal="timeout" from="StartTimer" to="." method="_on_StartTimer_timeout"]
-[connection signal="timeout" from="BeatSyncTimer" to="." method="_on_beat_sync_timeout"]

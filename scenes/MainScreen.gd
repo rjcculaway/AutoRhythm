@@ -19,5 +19,6 @@ func _ready():
 
 
 func _on_NewSong_pressed():
-	get_tree().change_scene_to(new_game_scene)
+	var result = get_tree().change_scene_to(new_game_scene)
+	assert(result == OK)
 	return

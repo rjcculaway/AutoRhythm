@@ -1,40 +1,59 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://addons/antialiased_line2d/antialiased_regular_polygon2d.gd" type="Script" id=1]
+[ext_resource path="res://graphics/StarParticle.png" type="Texture" id=2]
+
+[sub_resource type="CanvasItemMaterial" id=2]
+blend_mode = 1
+
+[sub_resource type="Gradient" id=3]
+interpolation_mode = 2
+colors = PoolColorArray( 0.366536, 0.315788, 0.369141, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
 
 [sub_resource type="ParticlesMaterial" id=1]
 lifetime_randomness = 1.0
 emission_shape = 5
-emission_ring_radius = 65.0
-emission_ring_inner_radius = 64.0
-emission_ring_height = 1.0
+emission_ring_radius = 84.0
+emission_ring_inner_radius = 84.0
+emission_ring_height = 0.0
 emission_ring_axis = Vector3( 0, 0, 1 )
+flag_align_y = true
 flag_rotate_y = true
+flag_disable_z = true
 direction = Vector3( 0, 0, 0 )
-spread = 180.0
+spread = 0.0
 gravity = Vector3( -1, -1, -1 )
 initial_velocity = 50.0
 initial_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
 radial_accel = 1000.0
+radial_accel_random = 1.0
 damping = 100.0
 damping_random = 0.26
+angle = 720.0
 angle_random = 1.0
-scale = 2.0
-scale_random = 0.57
-hue_variation = 0.09
+scale = 0.02
+scale_random = 0.04
+color_ramp = SubResource( 4 )
+hue_variation = 0.03
 hue_variation_random = 1.0
+anim_offset_random = 1.0
 
 [node name="MarginContainer" type="MarginContainer"]
-anchor_left = 0.5
-anchor_top = 0.811
-anchor_right = 0.5
+anchor_left = 0.506
+anchor_top = 0.756
+anchor_right = 0.506
 anchor_bottom = 1.0
-margin_left = -80.0
-margin_top = -23.92
-margin_right = 80.0
+margin_left = -88.0
+margin_top = -0.159973
+margin_right = 88.3199
 
-[node name="AntialiasedRegularPolygon2D2" type="Polygon2D" parent="."]
-position = Vector2( 80, 80 )
+[node name="BeatOutline" type="Polygon2D" parent="."]
+position = Vector2( 88, 88 )
 color = Color( 1, 1, 1, 0 )
 polygon = PoolVector2Array( -2.79753e-06, -64, 12.4858, -62.7703, 24.4917, -59.1283, 35.5565, -53.2141, 45.2548, -45.2548, 53.2141, -35.5565, 59.1283, -24.4917, 62.7703, -12.4858, 64, 0, 62.7703, 12.4858, 59.1283, 24.4917, 53.2141, 35.5565, 45.2548, 45.2548, 35.5565, 53.2141, 24.4917, 59.1283, 12.4858, 62.7703, -2.79753e-06, 64, -12.4858, 62.7703, -24.4917, 59.1283, -35.5565, 53.2141, -45.2548, 45.2548, -53.214, 35.5565, -59.1283, 24.4918, -62.7703, 12.4858, -64, 9.66373e-06, -62.7703, -12.4858, -59.1283, -24.4917, -53.2141, -35.5565, -45.2548, -45.2548, -35.5565, -53.214, -24.4917, -59.1283, -12.4858, -62.7703 )
 script = ExtResource( 1 )
@@ -42,23 +61,22 @@ size = Vector2( 128, 128 )
 stroke_color = Color( 0, 0, 0, 1 )
 stroke_width = 48.0
 
-[node name="Particles2D" type="Particles2D" parent="AntialiasedRegularPolygon2D2"]
-emitting = false
-amount = 2048
-lifetime = 0.5
-one_shot = true
-speed_scale = 3.0
-explosiveness = 1.0
-process_material = SubResource( 1 )
-
-[node name="AntialiasedRegularPolygon2D" type="Polygon2D" parent="."]
-position = Vector2( 80, 80 )
+[node name="BeatRing" type="Polygon2D" parent="."]
+position = Vector2( 88, 88 )
 color = Color( 1, 1, 1, 0 )
 polygon = PoolVector2Array( -2.79753e-06, -64, 12.4858, -62.7703, 24.4917, -59.1283, 35.5565, -53.2141, 45.2548, -45.2548, 53.2141, -35.5565, 59.1283, -24.4917, 62.7703, -12.4858, 64, 0, 62.7703, 12.4858, 59.1283, 24.4917, 53.2141, 35.5565, 45.2548, 45.2548, 35.5565, 53.2141, 24.4917, 59.1283, 12.4858, 62.7703, -2.79753e-06, 64, -12.4858, 62.7703, -24.4917, 59.1283, -35.5565, 53.2141, -45.2548, 45.2548, -53.214, 35.5565, -59.1283, 24.4918, -62.7703, 12.4858, -64, 9.66373e-06, -62.7703, -12.4858, -59.1283, -24.4917, -53.2141, -35.5565, -45.2548, -45.2548, -35.5565, -53.214, -24.4917, -59.1283, -12.4858, -62.7703 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_lock_": true
-}
 size = Vector2( 128, 128 )
 stroke_color = Color( 1, 1, 1, 1 )
 stroke_width = 32.0
+
+[node name="HitParticles" type="Particles2D" parent="."]
+material = SubResource( 2 )
+position = Vector2( 88, 88 )
+emitting = false
+amount = 1024
+lifetime = 0.38
+speed_scale = 2.0
+randomness = 1.0
+process_material = SubResource( 1 )
+texture = ExtResource( 2 )
