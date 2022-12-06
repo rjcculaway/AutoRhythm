@@ -16,7 +16,9 @@ var beat_scenes: Array = []
 
 var beat_channel_size = 0
 var current_index = 0
+var offset = 0
 var current_progress: float = 0.0
+var current_audio_progress: float = 0.0
 
 signal finished_loading_beat_channel(id)
 
@@ -30,7 +32,11 @@ func _input(event):
 			var particle_emitter: Particles2D = beat_target.get_node("HitParticles")
 			if event.is_action_pressed(key_press):
 				lane.color = active_color
-				particle_emitter.emitting = true
+				if self.is_playing and current_index < beat_channel_size:
+					var distance_to_nearest_beat = abs(self.current_audio_progress - beat_channel[current_index])
+					print(self.current_progress, " ", beat_channel[current_index], " ", distance_to_nearest_beat)
+					if distance_to_nearest_beat <= GameSettings.beat_tolerance:
+						particle_emitter.emitting = true
 			if event.is_action_released(key_press):
 				lane.color = inactive_color
 				particle_emitter.emitting = false
@@ -40,11 +46,11 @@ func load_beat_channel(beat_channel_to_load, offset):
 	self.beat_channel = beat_channel_to_load
 	self.beat_channel_size = beat_channel.size()
 	self.current_index = 0
+	self.offset = offset
 	
 	for i in range(beat_channel_size):
 		var new_beat = beat_scene.instance()
 		new_beat.beat_timestamp = beat_channel[i] + offset
-		# new_beat.position[0] = beat_target.rect_global_position[0] + beat_target.get_rect().size[0] / 2
 		beat_scenes.append(new_beat)
 		beats.add_child(new_beat)
 	
@@ -59,7 +65,14 @@ func pause():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if self.is_playing:
+		if current_index >= beat_channel_size:
+			self.is_playing = false
 		self.current_progress += delta
+		while current_index < beat_channel_size and self.current_audio_progress > beat_channel[current_index]:
+			current_index = current_index + 1
 		for beat in beats.get_children():
 			beat.update_position(current_progress, beat_target.rect_global_position[1] + beat_target.get_rect().size[1] / 2)
 	return
+
+func on_playback_progressed(playback_position):
+	self.current_audio_progress = playback_position + offset
