@@ -9,7 +9,10 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	var playback_position = self.get_playback_position() + AudioServer.get_time_since_last_mix()
-	emit_signal("playback_progressed", playback_position)
+	if self.playing:
+		var playback_position = self.get_playback_position() + AudioServer.get_time_since_last_mix()
+		emit_signal("playback_progressed", playback_position)
+	else:
+		emit_signal("playback_progressed", 0.0)
 	return
 	

@@ -18,6 +18,8 @@ func _ready():
 	if offset > 0:
 		var timer = get_tree().create_timer(offset)
 		timer.connect("timeout", self, "on_delay_timer_finished")
+	else:
+		music_player.play()
 
 func on_delay_timer_finished():
 	music_player.play()

@@ -17,10 +17,8 @@ var beat_scenes: Array = []
 var beat_channel_size = 0
 var current_index = 0
 var offset = 0
-var current_progress: float = 0.0
+var sync_progress: float = 0.0
 var current_audio_progress: float = 0.0
-
-signal finished_loading_beat_channel(id)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -33,8 +31,8 @@ func _input(event):
 			if event.is_action_pressed(key_press):
 				lane.color = active_color
 				if self.is_playing and current_index < beat_channel_size:
-					var distance_to_nearest_beat = abs(self.current_audio_progress - beat_channel[current_index])
-					print(self.current_progress, " ", beat_channel[current_index], " ", distance_to_nearest_beat)
+					var distance_to_nearest_beat = abs(self.current_audio_progress - (beat_channel[current_index] + offset))
+					print(self.current_audio_progress, " ", beat_channel[current_index], " ", distance_to_nearest_beat)
 					if distance_to_nearest_beat <= GameSettings.beat_tolerance:
 						particle_emitter.emitting = true
 			if event.is_action_released(key_press):
@@ -42,15 +40,15 @@ func _input(event):
 				particle_emitter.emitting = false
 
 # Loads a beat channel onto this beat lane. Assumes that the beat channel is sorted numerically in ascending order.
-func load_beat_channel(beat_channel_to_load, offset):
+func load_beat_channel(beat_channel_to_load, new_offset):
 	self.beat_channel = beat_channel_to_load
 	self.beat_channel_size = beat_channel.size()
 	self.current_index = 0
-	self.offset = offset
+	self.offset = new_offset
 	
 	for i in range(beat_channel_size):
 		var new_beat = beat_scene.instance()
-		new_beat.beat_timestamp = beat_channel[i] + offset
+		new_beat.beat_timestamp = beat_channel[i] + self.offset
 		beat_scenes.append(new_beat)
 		beats.add_child(new_beat)
 	
@@ -65,14 +63,16 @@ func pause():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if self.is_playing:
-		if current_index >= beat_channel_size:
-			self.is_playing = false
-		self.current_progress += delta
-		while current_index < beat_channel_size and self.current_audio_progress > beat_channel[current_index]:
+		self.sync_progress = min(offset, self.sync_progress + delta)
+		while current_index < beat_channel_size and self.current_audio_progress >= beat_channel[current_index] + offset:
 			current_index = current_index + 1
 		for beat in beats.get_children():
-			beat.update_position(current_progress, beat_target.rect_global_position[1] + beat_target.get_rect().size[1] / 2)
+			beat.update_position(current_audio_progress, beat_target.rect_global_position[1] + beat_target.get_rect().size[1] / 2)
+			if current_index < beat_channel_size and is_equal_approx(beat_channel[current_index] + offset, beat.beat_timestamp):
+				beat.activate_beat()
+			else:
+				beat.deactivate_beat()
 	return
 
 func on_playback_progressed(playback_position):
-	self.current_audio_progress = playback_position + offset
+	self.current_audio_progress = playback_position + self.sync_progress

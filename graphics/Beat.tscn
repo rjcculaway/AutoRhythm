@@ -12,3 +12,5 @@ script = ExtResource( 1 )
 size = Vector2( 72, 72 )
 stroke_color = Color( 1, 1, 1, 1 )
 stroke_width = 6.0
+
+[node name="ColorTween" type="Tween" parent="."]

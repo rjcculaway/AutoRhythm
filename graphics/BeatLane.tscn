@@ -16,11 +16,6 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="Label" type="Label" parent="."]
-margin_right = 40.0
-margin_bottom = 14.0
-text = "0"
-
 [node name="Lane" type="ColorRect" parent="."]
 anchor_left = 0.45
 anchor_right = 0.45
