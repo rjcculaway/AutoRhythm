@@ -8,7 +8,7 @@ func get_earliest_timestamp(beat_map):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var beat_map = beat_map_generator.generate_random_beat_map(music_player.stream)
+	var beat_map = beat_map_generator.generate_random_beat_map(music_player)
 	var earliest_timestamp = get_earliest_timestamp(beat_map)
 	var beat_lanes = ($MarginContainer/BeatLanes).get_children()
 	var offset = GameSettings.adjacency_radius - earliest_timestamp
