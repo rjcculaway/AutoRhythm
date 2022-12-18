@@ -32,10 +32,6 @@ func update_position(playback_position, final_position):
 	var new_position = lerp(STARTING_POSITION, final_position, progress)
 	self.position[1] = new_position
 	return
-
-func finish_displaying():
-	self.queue_free()
-	return
 	
 func activate_beat():
 	var _interpolate_result = color_tween.interpolate_property(beat_circle, "color",
@@ -50,5 +46,6 @@ func deactivate_beat():
 		beat_circle.color, Color.white, 0.125,
 		Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	var _result = color_tween.start()
+	self.queue_free()
 	
 	return

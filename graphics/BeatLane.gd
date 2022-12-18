@@ -77,10 +77,11 @@ func _process(delta):
 			current_index = current_index + 1
 		for beat in beats.get_children():
 			beat.update_position(current_audio_progress, beat_target.rect_global_position[1] + beat_target.get_rect().size[1] / 2)
-			if current_index < beat_channel_size and is_equal_approx(beat_channel[current_index] + offset, beat.beat_timestamp):
-				beat.activate_beat()
-			else:
-				beat.deactivate_beat()
+			if current_index < beat_channel_size:
+				if is_equal_approx(beat_channel[current_index] + offset, beat.beat_timestamp):
+					beat.activate_beat()
+				elif beat_channel[current_index] + offset > beat.beat_timestamp:
+					beat.deactivate_beat()
 	return
 
 func on_playback_progressed(playback_position):
