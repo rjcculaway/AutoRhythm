@@ -12,7 +12,6 @@ func _process(_delta):
 	if self.playing:
 		var playback_position = self.get_playback_position() + AudioServer.get_time_since_last_mix()
 		emit_signal("playback_progressed", playback_position)
-	else:
-		emit_signal("playback_progressed", 0.0)
+		# print("music_player", playback_position)
 	return
 	

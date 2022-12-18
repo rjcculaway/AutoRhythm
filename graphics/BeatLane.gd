@@ -32,7 +32,7 @@ func _input(event):
 				lane.color = active_color
 				if self.is_playing and current_index < beat_channel_size:
 					var distance_to_nearest_beat = abs(self.current_audio_progress - (beat_channel[current_index] + offset))
-					print(self.current_audio_progress, " ", beat_channel[current_index], " ", distance_to_nearest_beat)
+					# print(self.current_audio_progress, " ", beat_channel[current_index], " ", distance_to_nearest_beat)
 					if distance_to_nearest_beat <= GameSettings.beat_tolerance:
 						particle_emitter.emitting = true
 			if event.is_action_released(key_press):
@@ -40,19 +40,28 @@ func _input(event):
 				particle_emitter.emitting = false
 
 # Loads a beat channel onto this beat lane. Assumes that the beat channel is sorted numerically in ascending order.
-func load_beat_channel(beat_channel_to_load, new_offset):
-	self.beat_channel = beat_channel_to_load
+func load_beat_channel(new_offset):
+	self.beat_channel = []
 	self.beat_channel_size = beat_channel.size()
 	self.current_index = 0
 	self.offset = new_offset
 	
-	for i in range(beat_channel_size):
-		var new_beat = beat_scene.instance()
-		new_beat.beat_timestamp = beat_channel[i] + self.offset
-		beat_scenes.append(new_beat)
-		beats.add_child(new_beat)
+	# for i in range(beat_channel_size):
+	# 	var new_beat = beat_scene.instance()
+	# 	new_beat.beat_timestamp = beat_channel[i] + self.offset
+	# 	beat_scenes.append(new_beat)
+	# 	beats.add_child(new_beat)
 	
 	return
+
+func queue_beat(timestamp):
+	self.beat_channel.append(timestamp)
+	self.beat_channel_size = beat_channel.size()
+
+	var new_beat = beat_scene.instance()
+	new_beat.beat_timestamp = timestamp + self.offset
+	beat_scenes.append(new_beat)
+	beats.add_child(new_beat)
 
 func play():
 	self.is_playing = true
