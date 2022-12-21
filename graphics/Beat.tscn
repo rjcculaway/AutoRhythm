@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://addons/antialiased_line2d/antialiased_regular_polygon2d.gd" type="Script" id=1]
 [ext_resource path="res://graphics/Beat.gd" type="Script" id=2]
+[ext_resource path="res://music/Retro1.wav" type="AudioStream" id=3]
 
 [node name="Beat" type="Node2D"]
 script = ExtResource( 2 )
@@ -14,3 +15,11 @@ stroke_color = Color( 1, 1, 1, 1 )
 stroke_width = 6.0
 
 [node name="ColorTween" type="Tween" parent="."]
+
+[node name="ActivationSoundEffect" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+volume_db = 12.0
+
+[node name="DeactivateTween" type="Tween" parent="."]
+
+[connection signal="tween_all_completed" from="DeactivateTween" to="." method="_on_DeactivateTween_tween_all_completed"]

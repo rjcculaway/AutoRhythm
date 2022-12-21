@@ -54,14 +54,16 @@ func load_beat_channel(new_offset):
 	
 	return
 
-func queue_beat(timestamp):
-	self.beat_channel.append(timestamp)
-	self.beat_channel_size = beat_channel.size()
+func queue_beat(timestamp, beat_lane):
+	if beat_lane == self.key_press:
+		self.beat_channel.append(timestamp)
+		self.beat_channel_size = beat_channel.size()
 
-	var new_beat = beat_scene.instance()
-	new_beat.beat_timestamp = timestamp + self.offset
-	beat_scenes.append(new_beat)
-	beats.add_child(new_beat)
+		var new_beat = beat_scene.instance()
+		new_beat.position[0] = 82.0
+		new_beat.beat_timestamp = timestamp + self.offset
+		beat_scenes.append(new_beat)
+		beats.add_child(new_beat)
 
 func play():
 	self.is_playing = true
@@ -78,9 +80,9 @@ func _process(delta):
 		for beat in beats.get_children():
 			beat.update_position(current_audio_progress, beat_target.rect_global_position[1] + beat_target.get_rect().size[1] / 2)
 			if current_index < beat_channel_size:
-				if is_equal_approx(beat_channel[current_index] + offset, beat.beat_timestamp):
+				if is_equal_approx(beat_channel[current_index] + offset, beat.beat_timestamp) and not self.current_audio_progress + offset > beat.beat_timestamp:
 					beat.activate_beat()
-				elif beat_channel[current_index] + offset > beat.beat_timestamp:
+				if self.current_audio_progress + offset > beat.beat_timestamp:
 					beat.deactivate_beat()
 	return
 
