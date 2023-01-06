@@ -1,7 +1,7 @@
 extends AudioStreamPlayer
 
 # RMS stands for the root mean square
-const ROOT_MEAN_SQUARE_SAMPLES = 10	# Determines the number of samples for the root mean square
+const ROOT_MEAN_SQUARE_SAMPLES = 3	# Determines the number of samples for the root mean square
 const FREQ_MIN = 80.0
 const FREQ_MAX = 140.0
 const MIN_DB = 60
